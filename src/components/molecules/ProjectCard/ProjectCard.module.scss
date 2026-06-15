@@ -1,0 +1,94 @@
+@use "mixins";
+
+.card {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 12px; // match the image box so the link clips cleanly
+  overflow: hidden;
+
+  &:hover .imageEl {
+    transform: scale(1.03);
+  }
+}
+
+// Positioned wrapper that gives the `fill` image a size + aspect ratio.
+// Perfect square (1:1) — Tomi's landscape covers are center-cropped left/right
+// here (intended for this design).
+.image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px; // rounded photo corners; clips image, overlay + title
+  background-color: var(--neutral-700); // loading/fallback backdrop
+}
+
+// The next/image element (fill). Sits beneath the overlay + title.
+.imageEl {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s ease;
+}
+
+// Fallback when an album has no cover (shouldn't normally happen).
+.placeholder {
+  @include mixins.placeholder-box;
+  position: absolute;
+  inset: 0;
+}
+
+// Flat 13% black overlay between the image and the title (not a gradient).
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.13);
+  pointer-events: none;
+}
+
+// Real album title, always visible, centered over the card.
+.title {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  // ~10% horizontal padding so long titles never touch the card edges.
+  padding-inline: 10%;
+
+  // Card-title spec: Nunito Sans Black (900) italic, pure yellow with a thin
+  // dark stroke. font-synthesis: style allows the browser to slant the glyphs
+  // if a true 900-italic face isn't loaded, so italic never silently drops.
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-synthesis: style;
+  text-transform: uppercase;
+  color: var(--brand-color-yellow);
+
+  // Outside-style 1px stroke: paint-order draws the stroke first (behind the
+  // fill), so the dark outline reads as an outside edge and the yellow glyphs
+  // stay full rather than being eaten by a centered stroke.
+  -webkit-text-stroke: 1px #303001;
+  paint-order: stroke fill;
+
+  // Drop shadow sits behind everything (stroke, then fill, paint on top).
+  text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.66);
+
+  // Fixed per-breakpoint sizes: 38 (Small) / 42 (Medium = Large) / 52 (xLarge).
+  font-size: 38px;
+  line-height: 1.15;
+  overflow-wrap: break-word;
+
+  @include mixins.bp(medium) {
+    font-size: 42px; // also covers Large (no separate bp(large) needed)
+  }
+
+  @include mixins.bp(xlarge) {
+    font-size: 52px;
+  }
+}

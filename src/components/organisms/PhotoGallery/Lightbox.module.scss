@@ -1,0 +1,212 @@
+@use "mixins";
+
+// Fullscreen lightbox. Rendered in a portal on document.body, above everything.
+.overlay {
+  // --- Tuning knobs (single values, easy to adjust) --------------------------
+  --lb-band: 82px; // top close-band height + bottom margin
+  --lb-chip-bg: rgba(255, 255, 255, 0.13); // close + arrow chip backing
+  --lb-close-chip: 82px; // close chip square
+  --lb-close-icon: 50px; // X icon size
+  --lb-arrow-chip: 82px; // arrow chip square — same as the close chip
+  --lb-arrow-icon: 44px; // arrow icon size (balanced within the 82 chip)
+  --lb-icon-color: #ffffff; // white close X
+
+  // Per-breakpoint neighbor peek width + focused↔neighbor gap. Base = Small
+  // (no neighbors); overridden up at Medium / Large (xLarge inherits Large).
+  --lb-peek: 0px;
+  --lb-gap: 0px;
+  // ---------------------------------------------------------------------------
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000; // above the absolute header (z 100) and all page content
+  // OPAQUE solid black — the page below is fully hidden while open.
+  background: #000000;
+  overflow: hidden;
+  animation: lightbox-fade 0.18s ease-out;
+
+  @include mixins.bp(medium) {
+    --lb-peek: 50px;
+    --lb-gap: 24px;
+  }
+
+  @include mixins.bp(large) {
+    --lb-peek: 100px;
+    --lb-gap: 48px; // xLarge inherits these (same values)
+  }
+}
+
+// The central region that holds the focused image: between the top close band
+// and the bottom margin, inset by peek + gap on each side so the neighbor
+// slivers and gaps sit outside it.
+.stage {
+  position: absolute;
+  top: var(--lb-band);
+  bottom: var(--lb-band);
+  left: calc(var(--lb-peek) + var(--lb-gap));
+  right: calc(var(--lb-peek) + var(--lb-gap));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Focused image: natural ratio, contained + centered within the stage box.
+.focused {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  animation: lightbox-zoom 0.18s ease-out;
+}
+
+// Peeking neighbors: cropped vertical slivers pinned to the screen edges,
+// spanning the full images-section height. Decorative (pointer-events: none).
+// Hidden on Small (no neighbors); shown from Medium up.
+.peek {
+  position: absolute;
+  top: var(--lb-band);
+  bottom: var(--lb-band);
+  width: var(--lb-peek);
+  z-index: 1;
+  object-fit: cover; // crop to a vertical strip
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  display: none;
+
+  @include mixins.bp(medium) {
+    display: block;
+  }
+}
+
+.peekPrev {
+  left: 0;
+}
+
+.peekNext {
+  right: 0;
+}
+
+// Close button — bold white X on a white-13% square chip, top-right corner.
+// Flush to the corner so the images section starts immediately below it.
+.close {
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  width: var(--lb-close-chip);
+  height: var(--lb-close-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--lb-chip-bg);
+  color: var(--lb-icon-color);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  svg {
+    display: block;
+    width: var(--lb-close-icon);
+    height: var(--lb-close-icon);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+}
+
+// Nav arrows — 82×82 white-13% square chip flush to each edge, vertically
+// centered (same size as the close chip). The arrow icon matches the homepage
+// card-title treatment: yellow fill + thin dark #303001 outline + soft drop
+// shadow (the SVG equivalents of fill / stroke / text-shadow).
+.nav {
+  position: fixed;
+  z-index: 4;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--lb-arrow-chip);
+  height: var(--lb-arrow-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--lb-chip-bg);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  svg {
+    display: block;
+    width: var(--lb-arrow-icon);
+    height: var(--lb-arrow-icon);
+    // Card-title drop shadow (text-shadow → drop-shadow filter for SVG).
+    filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.66));
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+}
+
+// Two stacked arrow paths: a thicker dark underlay = the #303001 "outline",
+// the yellow path on top = the fill. The width difference leaves a ~1px dark
+// edge around the yellow line, mirroring the card title's 1px stroke.
+.arrowOutline {
+  fill: none;
+  stroke: #303001;
+  stroke-width: 4.5;
+}
+
+.arrowFill {
+  fill: none;
+  stroke: var(--brand-color-yellow);
+  stroke-width: 3;
+}
+
+.navPrev {
+  left: 0;
+}
+
+.navNext {
+  right: 0;
+}
+
+@keyframes lightbox-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lightbox-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Respect reduced-motion preferences.
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .focused {
+    animation: none;
+  }
+}

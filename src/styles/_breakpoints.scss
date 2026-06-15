@@ -1,0 +1,24 @@
+// Mobile-first breakpoints (min-width). "Small" is the base — no media query.
+// TODO: the Small->Medium threshold (768px) is an assumption — confirm against the design.
+$bp-medium: 768px;
+$bp-large: 1440px;
+$bp-xlarge: 1920px;
+
+// Usage: @include bp(medium) { ... }
+@mixin bp($name) {
+  @if $name == medium {
+    @media (min-width: $bp-medium) {
+      @content;
+    }
+  } @else if $name == large {
+    @media (min-width: $bp-large) {
+      @content;
+    }
+  } @else if $name == xlarge {
+    @media (min-width: $bp-xlarge) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint: #{$name}. Use medium, large, or xlarge.";
+  }
+}

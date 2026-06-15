@@ -1,0 +1,5 @@
+// Global utility layer: emits the grid system (.container / .row / .col-*) and
+// the type scale (.type-*) as real, globally-available classes.
+// Imported once in app/layout.tsx, after globals.css.
+@use "grid";
+@use "typography";

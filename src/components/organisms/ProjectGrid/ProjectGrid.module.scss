@@ -1,0 +1,35 @@
+@use "mixins";
+
+.section {
+  // Transparent so the body's black→red gradient shows through.
+  color: var(--text);
+  // Top padding clears the absolutely-positioned Header (~65px) and leaves a
+  // ~64px gap to the first card row (8rem ≈ 128px = header + 64px).
+  padding-block: 8rem 4rem;
+}
+
+// Local grid (not the global .row): responsive card columns.
+// 1 column on Small, 2 columns on Medium and up (large square cards each ~half
+// the container width). Gutter (column + row gap) = 24px.
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  @include mixins.bp(medium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.item {
+  margin: 0;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding-block: 4rem;
+}

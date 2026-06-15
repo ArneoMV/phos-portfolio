@@ -1,0 +1,13 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  // Transparent so the body's black→red gradient shows through.
+  color: var(--text);
+}
+
+.head {
+  // Clears the absolute Header (~65px) with a small gap so the breadcrumb hugs
+  // it. The 64px gap below the breadcrumb lives on the gallery's padding-top.
+  padding-top: 5rem;
+  padding-bottom: 0;
+}

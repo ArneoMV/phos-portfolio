@@ -1,0 +1,14 @@
+@use "typography";
+
+.footer {
+  margin-top: auto; // pins the copyright to the bottom of the flex-column body
+}
+
+.bar {
+  padding-block: 2rem;
+}
+
+.copyright {
+  @include typography.small;
+  color: var(--text-muted);
+}

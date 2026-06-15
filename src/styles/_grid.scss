@@ -1,0 +1,106 @@
+@use "sass:map";
+@use "breakpoints" as bp;
+
+// Exact values taken from the design. Gutter is 24px on every breakpoint.
+$grid: (
+  small: (
+    cols: 4,
+    margin: 16px,
+    gutter: 24px,
+  ),
+  medium: (
+    cols: 12,
+    margin: 40px,
+    gutter: 24px,
+  ),
+  large: (
+    cols: 12,
+    margin: 40px,
+    gutter: 24px,
+  ),
+  xlarge: (
+    cols: 12,
+    margin: 200px,
+    gutter: 24px,
+  ),
+);
+
+// Helpers to read config without repeating map.get everywhere.
+@function grid-cols($name) {
+  @return map.get(map.get($grid, $name), cols);
+}
+@function grid-margin($name) {
+  @return map.get(map.get($grid, $name), margin);
+}
+@function grid-gutter($name) {
+  @return map.get(map.get($grid, $name), gutter);
+}
+
+// .container — horizontal padding equal to the per-breakpoint margin, capped at
+// 1520px and centered on wide screens.
+.container {
+  width: 100%;
+  max-width: 1520px;
+  margin-inline: auto;
+  padding-inline: grid-margin(small);
+
+  @include bp.bp(medium) {
+    padding-inline: grid-margin(medium);
+  }
+  @include bp.bp(large) {
+    padding-inline: grid-margin(large);
+  }
+  @include bp.bp(xlarge) {
+    padding-inline: grid-margin(xlarge);
+  }
+}
+
+// .row — the global grid track. Direct children may use .col-{n}-{bp} classes.
+.row {
+  display: grid;
+  grid-template-columns: repeat(grid-cols(small), 1fr);
+  column-gap: grid-gutter(small);
+  row-gap: grid-gutter(small);
+
+  @include bp.bp(medium) {
+    grid-template-columns: repeat(grid-cols(medium), 1fr);
+  }
+}
+
+// Column span classes, generated per breakpoint suffix.
+// NOTE: reliable only on DIRECT children of .row. For nested layouts inside a
+// component, use local CSS grid/flex — not these global classes.
+
+// Small: base, 1..4
+@for $n from 1 through grid-cols(small) {
+  .col-#{$n}-sm {
+    grid-column: span $n;
+  }
+}
+
+// Medium: 1..12
+@include bp.bp(medium) {
+  @for $n from 1 through grid-cols(medium) {
+    .col-#{$n}-md {
+      grid-column: span $n;
+    }
+  }
+}
+
+// Large: 1..12
+@include bp.bp(large) {
+  @for $n from 1 through grid-cols(large) {
+    .col-#{$n}-lg {
+      grid-column: span $n;
+    }
+  }
+}
+
+// xLarge: 1..12
+@include bp.bp(xlarge) {
+  @for $n from 1 through grid-cols(xlarge) {
+    .col-#{$n}-xl {
+      grid-column: span $n;
+    }
+  }
+}

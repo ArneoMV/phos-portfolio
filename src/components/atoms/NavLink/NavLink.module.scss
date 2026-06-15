@@ -1,0 +1,18 @@
+@use "typography";
+
+.navLink {
+  @include typography.small;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.active {
+  color: var(--color-accent);
+}

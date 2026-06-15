@@ -1,0 +1,83 @@
+@use "mixins";
+@use "typography";
+
+/* Dark hero */
+.hero {
+  position: relative;
+  background: var(--bg);
+  color: var(--text);
+  padding-top: 8rem; // room for the absolute Header
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+}
+
+.portrait {
+  @include mixins.placeholder-box;
+  width: 100%;
+  max-width: 420px;
+  height: 480px;
+  margin-inline: auto;
+}
+
+.heroIntro {
+  @include typography.body;
+  max-width: 40ch;
+  margin: 2rem auto 0;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.heroHeading {
+  @include typography.display;
+  text-transform: uppercase;
+  text-align: center;
+  // Overlaps the bottom of the hero, bleeding into the light section below.
+  margin-top: 2rem;
+  margin-bottom: -0.3em;
+  position: relative;
+  z-index: 2;
+}
+
+/* Light body */
+.body {
+  background: var(--bg-light);
+  color: var(--text-on-light);
+  padding-block: 6rem 4rem;
+}
+
+.bodyInner {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  @include mixins.bp(medium) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.paragraph {
+  @include typography.body;
+  flex: 1;
+}
+
+.portraitLight,
+.camera {
+  @include mixins.placeholder-box;
+  width: 100%;
+  height: 320px;
+
+  @include mixins.bp(medium) {
+    flex: 1;
+  }
+}

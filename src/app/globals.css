@@ -1,26 +1,89 @@
-@import "tailwindcss";
+/*
+ * Tailwind v4 is kept ONLY for its preflight/reset base.
+ * Do NOT add Tailwind utility classes to components — all real styling lives
+ * in co-located *.module.scss files and the shared SCSS system in src/styles.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/preflight.css" layer(base);
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Neutral */
+  --neutral-100: #fffefe;
+  --neutral-200: #f9f9f9;
+  --neutral-300: #f3f3f3;
+  --neutral-400: #e3e3e3;
+  --neutral-500: #a2a2a2;
+  --neutral-600: #7f7f7f;
+  --neutral-700: #454545;
+  --neutral-800: #242424;
+  --neutral-900: #262626;
+
+  /* Yellow (brand) */
+  --yellow-50: #fcffeb;
+  --yellow-100: #f7ffc2;
+  --yellow-150: #f1ff99;
+  --yellow-200: #ecff70;
+  --yellow-250: #e7ff47;
+  --yellow-300: #e1ff1f;
+  --yellow-350: #d4f500;
+  --yellow-400: #b1cc00;
+  --yellow-450: #8da300;
+  /* TODO: in the source, Yellow/450 and Yellow/500 share #8DA300 but the
+     swatches look different (500 darker). Likely a typo — Arneo to confirm
+     the real 500 value. Using #8DA300 for now. */
+  --yellow-500: #8da300;
+  --yellow-550: #6a7a00;
+  --yellow-600: #475200;
+  --yellow-650: #232900;
+  --yellow-700: #121400;
+
+  /* Semantic aliases */
+  --bg: var(--neutral-800); /* default dark page background */
+  --bg-light: var(--neutral-300); /* About page body section */
+  --text: var(--neutral-100); /* text on dark */
+  --text-muted: var(--neutral-500);
+  --text-on-light: var(--neutral-800); /* text on light section */
+  --color-accent: var(--yellow-300); /* brand yellow. Single source — change here to retune. */
+  --color-accent-strong: var(--yellow-400); /* darker accent for hover/contrast if needed */
+
+  /* Brand colors (separate from --color-accent) */
+  --cannon-brand-color-100: #cc0000; /* red used in the background gradient */
+  --brand-color-yellow: #ffff00; /* pure yellow for card title labels (Task 2) */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  height: auto;
+  /* Solid black base so nothing light can ever show through the gradient. */
+  background: #000000;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Fill the viewport on short pages, grow with content on long ones. The body
+     is the flex column holding header + content + footer, so its painted height
+     equals the full document height. */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Site-wide vertical gradient anchored to the FULL PAGE height (not the
+     viewport): pure black holds to 88%, then only the last ~12% fades into a
+     subtle dark red near the copyright. Colors are OPAQUE dark maroons blended
+     into black (#1a0303 / #3d0707), NOT translucent red — so the bottom can
+     never composite over a light surface and read as white/pink. A solid black
+     base on html/body backs it up. NOT background-attachment: fixed, so the red
+     sits at the page bottom and does not follow the scroll. background-size:
+     100% 100% + no-repeat stretches it once over the whole page. Section
+     backgrounds are transparent so this shows through. */
+  background: #000000
+    linear-gradient(
+      to bottom,
+      #000000 0%,
+      #000000 88%,
+      #1a0303 95%,
+      #3d0707 100%
+    )
+    no-repeat;
+  background-size: 100% 100%;
+  color: var(--text);
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
