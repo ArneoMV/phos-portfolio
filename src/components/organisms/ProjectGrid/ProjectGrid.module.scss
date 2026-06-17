@@ -5,7 +5,7 @@
   color: var(--text);
   // Top padding clears the absolutely-positioned Header (~65px) and leaves a
   // ~64px gap to the first card row (8rem ≈ 128px = header + 64px).
-  padding-block: 8rem 4rem;
+  padding-block: 64px 16px;
 }
 
 // Local grid (not the global .row): responsive card columns.
@@ -17,11 +17,11 @@
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 64px;
+  gap: 16px; // Small
 
   @include mixins.bp(medium) {
     grid-template-columns: repeat(2, 1fr);
-    gap: px;
+    gap: 24px; // Medium, inherited by Large + xLarge
   }
 }
 

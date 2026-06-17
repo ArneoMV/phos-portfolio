@@ -20,7 +20,7 @@ export default function PhotoGallery({
       className={styles.section}
       aria-label={`${albumTitle} — photo gallery`}
     >
-      <div className="container">
+      <div className="container container--narrow">
         {photos.length === 0 ? (
           <p className={styles.empty}>No photos in this project yet.</p>
         ) : (

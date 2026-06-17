@@ -4,6 +4,7 @@ import { nunitoSans, aerosoldier } from "@/lib/fonts";
 import Header from "@/components/organisms/Header/Header";
 import Footer from "@/components/organisms/Footer/Footer";
 import GridOverlay from "@/components/dev/GridOverlay/GridOverlay";
+import ContactBodyLock from "@/components/util/ContactBodyLock/ContactBodyLock";
 import "./globals.css";
 import "@/styles/utilities.scss";
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       className={`${nunitoSans.variable} ${aerosoldier.variable}`}
     >
       <body>
+        <ContactBodyLock />
         <Header />
         {children}
         <Footer />

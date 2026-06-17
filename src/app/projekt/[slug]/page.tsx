@@ -66,7 +66,7 @@ export default async function ProjectPage({
 
   return (
     <main className={styles.main}>
-      <div className={`container ${styles.head}`}>
+      <div className={`container container--narrow ${styles.head}`}>
         <Breadcrumb title={album.title} />
       </div>
       <PhotoGallery photos={photos} albumTitle={album.title} />

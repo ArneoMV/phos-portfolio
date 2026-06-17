@@ -9,7 +9,7 @@ type ProjectGridProps = {
 export default function ProjectGrid({ albums }: ProjectGridProps) {
   return (
     <section className={styles.section}>
-      <div className="container">
+      <div className="container container--narrow">
         {albums.length === 0 ? (
           <p className={styles.empty}>No projects yet.</p>
         ) : (

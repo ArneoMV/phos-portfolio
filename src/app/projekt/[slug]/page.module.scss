@@ -6,8 +6,9 @@
 }
 
 .head {
-  // Clears the absolute Header (~65px) with a small gap so the breadcrumb hugs
-  // it. The 64px gap below the breadcrumb lives on the gallery's padding-top.
-  padding-top: 5rem;
+  // The header is in-flow (position: relative), so no clearance is needed — this
+  // small padding-top is just the breadcrumb's top breathing room below the
+  // header. The 64px gap below the breadcrumb lives on the gallery's padding-top.
+  padding-top: 1rem;
   padding-bottom: 0;
 }

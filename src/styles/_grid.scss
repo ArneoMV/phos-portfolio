@@ -55,6 +55,18 @@ $grid: (
   }
 }
 
+// Narrow variant for the homepage + project pages (Header, content, Footer all
+// align to 1100px there). Composes with .container; only lowers the cap. The
+// 200px xlarge side padding is pointless on a 1100px-capped centered box, so
+// drop it back to 40px. small/medium/large padding inherits from .container.
+.container--narrow {
+  max-width: 1100px;
+
+  @include bp.bp(xlarge) {
+    padding-inline: grid-margin(large); // 40px, not 200px
+  }
+}
+
 // .row — the global grid track. Direct children may use .col-{n}-{bp} classes.
 .row {
   display: grid;

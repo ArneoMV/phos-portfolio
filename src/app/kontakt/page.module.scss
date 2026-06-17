@@ -80,7 +80,7 @@
 .socials {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 1rem;
   margin-top: 1.5rem;
 }
@@ -155,21 +155,35 @@
 // grows/shrinks with the viewport without overflow or a gap. ---
 @media (max-width: 520px) {
   .main {
-    // Header is absolute (0 flow height) and is 64px tall on mobile, so reserve
-    // 64px (header) + 64px (gap) = 128px before the info section starts.
-    padding-top: 128px;
+    // The entire header reserve lives on the grid below (deterministic), so
+    // none of it can be eaten by a dvh/flex interaction on .main's padding.
+    padding-top: 0;
+    height: 100dvh; // dynamic viewport height — no overflow when the address bar shows
     overflow: hidden; // safety: the scaled photo never forces a scrollbar
   }
 
+  // Explicit 2-row grid: row 1 = text (natural height), row 2 = photo (fills the
+  // rest). padding-top reserves the full 64px header + 64px gap = 128px above
+  // row 1 (border-box). Grid rows can't reorder or collapse like flex+order.
   .inner {
-    flex: 1; // fill main height (below the 128px header+gap reserve)
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 98px; // 98px between the info section and the photo
+    flex: 1; // still fills .main as a flex item of the column
+    display: grid;
+    grid-template-rows: auto 1fr;
+    row-gap: 24px; // gap between the text row and the photo row
+    padding-top: 64px; // full header(64)+gap(64) reserve, deterministic
   }
 
-  // .text keeps order:-1 (base) → sits at the top; photo follows below.
+  .text {
+    grid-row: 1;
+    order: 0; // grid placement is explicit; neutralise the base order:-1
+  }
+
+  .photoWrap {
+    grid-row: 2;
+    min-height: 0; // allow the photo row to shrink within the grid
+  }
+
+  // .text is placed in grid-row 1 (above); the photo fills grid-row 2.
   // Email stays 21px (base) on mobile per the latest type spec.
 
   .subtitle {

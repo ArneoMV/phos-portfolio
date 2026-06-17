@@ -2,14 +2,14 @@
 
 .header {
   // Sits over the gradient — keep background transparent.
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
   background: transparent;
-      padding-top: 16px;
-    padding-left: 12px;
+  padding-top: 16px;
+  padding-left: 12px;
 }
 
 // Three-column row: social (left) | "Jeffrey" (center) | Contact (right).
@@ -60,19 +60,23 @@
   }
 }
 
-// Matches the Contact NavLink: 21px Nunito Sans Semibold white, hover → yellow
-// Semibold Italic.
+// Wraps an inline SVG icon (Instagram / LinkedIn). White, recolored to yellow on
+// hover via currentColor on the icon path.
 .socialLink {
-  font-family: var(--font-nunito), system-ui, sans-serif;
-  font-size: 21px;
-  font-weight: 600;
-  color: var(--text); // white
+  display: inline-flex;
+  align-items: center;
+  color: var(--text); // white — inherited by the icon via currentColor
   text-decoration: none;
-  white-space: nowrap;
   transition: color 0.15s ease;
 
   &:hover {
     color: var(--brand-color-yellow); // #FFFF00
-    font-style: italic;
   }
+}
+
+// Inline social icon: 21px square, color inherited from .socialLink.
+.socialIcon {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
