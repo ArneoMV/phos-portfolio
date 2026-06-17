@@ -39,7 +39,7 @@
 
   /* Semantic aliases */
   --bg: var(--neutral-800); /* default dark page background */
-  --bg-light: var(--neutral-300); /* About page body section */
+  --bg-light: var(--neutral-300); /* light section token (currently unused) */
   --text: var(--neutral-100); /* text on dark */
   --text-muted: var(--neutral-500);
   --text-on-light: var(--neutral-800); /* text on light section */
@@ -86,4 +86,60 @@ body {
   color: var(--text);
   font-family: var(--font-nunito), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile-only page slide (View Transitions API)
+
+   experimental.viewTransition (next.config.ts) wraps client route navigations
+   in document.startViewTransition. The browser captures the whole page under
+   the default `root` snapshot, which these rules animate: the old page slides
+   out to the LEFT while the new page slides in from the RIGHT.
+
+   - Mobile only: the slide is gated to <=520px; desktop navigations are instant
+     (animation: none above the breakpoint — no slide, no default crossfade).
+   - prefers-reduced-motion: instant everywhere.
+   - Fallback: browsers without View Transitions support just navigate (the
+     pseudo-elements never exist, so nothing animates and nothing breaks).
+   --------------------------------------------------------------------------- */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 520px) {
+  ::view-transition-old(root) {
+    animation: slide-out-left 300ms ease both;
+  }
+  ::view-transition-new(root) {
+    animation: slide-in-right 300ms ease both;
+  }
+}
+
+/* Desktop (>520px): no animation — instant navigation. */
+@media (min-width: 521px) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* Reduced motion: never slide. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
 }

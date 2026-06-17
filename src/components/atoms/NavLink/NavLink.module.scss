@@ -1,18 +1,47 @@
-@use "typography";
-
 .navLink {
-  @include typography.small;
-  text-transform: uppercase;
+  position: relative; // anchors the active corner brackets
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-size: 21px;
+  font-weight: 600; // Semibold
+  font-style: normal;
+  color: var(--text); // white
   text-decoration: none;
-  color: inherit;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 
   &:hover {
-    opacity: 0.6;
+    color: var(--brand-color-yellow); // #FFFF00 — matches the corner brackets
+    font-style: italic; // Semibold Italic on hover
   }
 }
 
+// Active route: yellow text + four corner brackets (no more "[ label ]").
 .active {
-  color: var(--color-accent);
+  color: var(--brand-color-yellow);
+}
+
+// Corner bracket icons, placed just outside the four corners of the label.
+.corner {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  color: inherit; // stroke="currentColor" → active yellow
+  pointer-events: none;
+}
+
+.cornerTL {
+  top: -5px;
+  left: -7px;
+}
+.cornerTR {
+  top: -5px;
+  right: -7px;
+}
+.cornerBL {
+  bottom: -5px;
+  left: -7px;
+}
+.cornerBR {
+  bottom: -5px;
+  right: -7px;
 }

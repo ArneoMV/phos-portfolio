@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { nunitoSans, aerosoldier } from "@/lib/fonts";
 import Header from "@/components/organisms/Header/Header";
 import Footer from "@/components/organisms/Footer/Footer";
@@ -27,6 +28,7 @@ export default function RootLayout({
         {children}
         <Footer />
         {process.env.NODE_ENV !== "production" && <GridOverlay />}
+        <Analytics />
       </body>
     </html>
   );

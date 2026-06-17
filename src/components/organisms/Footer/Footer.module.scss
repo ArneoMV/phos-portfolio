@@ -1,14 +1,37 @@
-@use "typography";
-
 .footer {
   margin-top: auto; // pins the copyright to the bottom of the flex-column body
 }
 
+// Contact route only: lift the bar out of flow and overlay the very bottom of
+// the single-screen page (above the photo, beneath the red wash). Containing
+// block is the initial viewport; on the exactly-100vh contact page bottom:0 is
+// the screen bottom. z 2 sits above the photo content (z 1) and below the red
+// wash (z 3) so the red still passes over the copyright.
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  margin-top: 0;
+}
+
+// Two-sided bar: copyright left, credit right, within the 1520 container.
 .bar {
-  padding-block: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 12px;
 }
 
 .copyright {
-  @include typography.small;
+  font-size: 14px;
+  line-height: 1.2;
   color: var(--text-muted);
+
+  // Small mobile (≤520px, matching the header breakpoint): 10px both sides.
+  @media (max-width: 520px) {
+    font-size: 14px;
+  }
 }

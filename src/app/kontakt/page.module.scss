@@ -1,0 +1,203 @@
+@use "mixins";
+
+// BOTTOM layer: solid pure-black base covering the page (over the global body
+// gradient). The body is a flex column (header is absolute / 0 flow height), so
+// `flex: 1` makes main fill the viewport MINUS the copyright bar — main + footer
+// total exactly 100vh with no scroll. (Not min-height:100vh, which would stack
+// ON TOP of the footer and overflow.)
+.main {
+  position: relative; // NOT a stacking context (no z-index) so .redWash escapes
+  flex: 1 1 auto; // fill the remaining viewport height above the copyright
+  min-height: 0; // allow shrinking so it never forces a scrollbar
+  background: #000000; // pure black base; red gradient/wash layers sit on top
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; // anchor the group to the bottom
+  padding-top: 64px; // 64px gap below the (absolute) header
+}
+
+// MIDDLE layer: the content group. z-index:1 keeps it above the base and below
+// the red wash. Small: stacked column (text above photo). Desktop: centered row.
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.photoWrap {
+  margin: 0;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+}
+
+// 720px tall on desktop, width derived from the aspect ratio (no crop).
+// object-fit: contain guards against distortion if the width is ever capped.
+.photo {
+  display: block;
+  height: 60vh; // small screens
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: bottom;
+}
+
+.text {
+  order: -1; // email block ABOVE the photo on Small
+}
+
+.email {
+  display: inline-block;
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-weight: 900; // Black
+  font-style: italic;
+  color: var(--text); // white
+  text-decoration: none;
+  font-size: 21px;
+  line-height: 1.5; // 150%
+  word-break: break-word;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.subtitle {
+  margin: 0.75rem 0 0;
+  color: var(--text-muted);
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.4;
+  max-width: 32ch;
+}
+
+// Instagram (left) / Linkedin (right) — shown in the contact body on ALL sizes
+// (they don't conflict with the desktop header's own social links).
+.socials {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.socialLink {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+// TOP layer: red gradient OVER the content. Fixed to the viewport, above the
+// content (z 2) but below the header (z 100); washes red across the bottom of
+// the photo and the copyright. pointer-events:none so the mailto + all links
+// underneath stay clickable.
+.redWash {
+  position: fixed;
+  inset: 0;
+  z-index: 3; // above content (z1) AND the copyright overlay (z2)
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 58%,
+    rgba(204, 0, 0, 0.33) 100%
+  );
+}
+
+// --- Desktop (Medium and up): centered row, photo bottom-anchored ----------
+@include mixins.bp(medium) {
+  .inner {
+    flex-direction: row;
+    align-items: flex-end; // photo base sits on the bottom
+    justify-content: center; // center the group within the container
+    gap: 48px; // Medium
+  }
+
+  .photo {
+    height: 720px;
+    // Short-screen safeguard: never let the photo force the page past 100vh.
+    // Caps below 720 when the viewport can't fit it + the header/copyright.
+    max-height: calc(100vh - 160px);
+  }
+
+  .text {
+    order: 0;
+    align-self: start;
+    padding-top: 98px;
+  }
+
+  .subtitle {
+    max-width: 46ch;
+  }
+}
+
+@include mixins.bp(large) {
+  .inner {
+    gap: 64px; // Large + xLarge inherit
+  }
+}
+
+// --- Mobile (≤520px): a full-height flex column —
+//   [header] → 64px → [email + subtitle + socials] → 64px → [photo fills rest].
+// The photo's container takes the leftover space (flex: 1) and the photo scales
+// to fit it (object-fit: contain, bottom-anchored) — no fixed height, so it
+// grows/shrinks with the viewport without overflow or a gap. ---
+@media (max-width: 520px) {
+  .main {
+    // Header is absolute (0 flow height) and is 64px tall on mobile, so reserve
+    // 64px (header) + 64px (gap) = 128px before the info section starts.
+    padding-top: 128px;
+    overflow: hidden; // safety: the scaled photo never forces a scrollbar
+  }
+
+  .inner {
+    flex: 1; // fill main height (below the 128px header+gap reserve)
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 98px; // 98px between the info section and the photo
+  }
+
+  // .text keeps order:-1 (base) → sits at the top; photo follows below.
+  // Email stays 21px (base) on mobile per the latest type spec.
+
+  .subtitle {
+    font-size: 16px;
+    max-width: none;
+    margin-top: 8px; // 8px below the email heading
+  }
+
+  .socials {
+    margin-top: 24px; // 24px below the subtitle
+  }
+
+  .photoWrap {
+    position: static; // reset the previous absolute placement
+    flex: 1 1 auto; // take the remaining vertical space after text + gaps
+    min-height: 0; // allow it to shrink within the column
+    width: 100%; // full container width (within the 16px gutters)
+    display: flex;
+    align-items: flex-end; // anchor the photo to the bottom
+    justify-content: center;
+  }
+
+  .photo {
+    width: 100%;
+    height: 100%; // fill the flexible container...
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; // ...while keeping aspect ratio — no distortion/crop
+    object-position: bottom; // anchored at the bottom
+  }
+}

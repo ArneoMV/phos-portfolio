@@ -8,6 +8,8 @@
   right: 0;
   z-index: 100;
   background: transparent;
+      padding-top: 16px;
+    padding-left: 12px;
 }
 
 // Three-column row: social (left) | "Jeffrey" (center) | Contact (right).
@@ -36,60 +38,41 @@
   justify-self: end;
 }
 
+// Small mobile (≤520px): only the "Jeffrey" logo (left) + Contact (right).
+// Hide the social links and collapse to a two-column row with the logo
+// left-aligned. (The project's breakpoints are min-width only, so this is a
+// dedicated max-width query.)
+@media (max-width: 520px) {
+  .left {
+    display: none;
+  }
+
+  .inner {
+    grid-template-columns: 1fr auto;
+    // Fixed 64px-tall mobile header (logo fits within; content vertically
+    // centered). The Contact mobile layout reserves header + gap accordingly.
+    height: 64px;
+    padding-block: 0;
+  }
+
+  .center {
+    justify-self: start;
+  }
+}
+
+// Matches the Contact NavLink: 21px Nunito Sans Semibold white, hover → yellow
+// Semibold Italic.
 .socialLink {
-  @include typography.small;
-  text-transform: uppercase;
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text); // white
   text-decoration: none;
-  color: inherit;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 
   &:hover {
-    opacity: 0.6;
+    color: var(--brand-color-yellow); // #FFFF00
+    font-style: italic;
   }
-}
-
-/* Contact: a button styled to look like the social links. */
-.contact {
-  position: relative; // anchors the popover
-  display: inline-flex;
-}
-
-.contactButton {
-  @include typography.small;
-  font-family: inherit; // buttons don't inherit family by default
-  text-transform: uppercase;
-  color: inherit;
-  white-space: nowrap;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-
-  &:hover {
-    opacity: 0.6;
-  }
-}
-
-/* Confirmation popover, 12px below the Contact item. */
-.popover {
-  position: absolute;
-  top: calc(100% + 12px);
-  z-index: 200; // above page content
-  padding: 0.5rem 0.75rem;
-  font-size: 14px;
-  line-height: 1.2;
-  white-space: nowrap;
-  text-transform: none;
-  color: var(--text);
-  background: var(--neutral-700);
-  border-left: 2px solid var(--color-accent);
-  border-radius: 4px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-// Anchor right so the popover can't overflow the viewport edge (top-right nav).
-.popoverRight {
-  right: 0;
 }
