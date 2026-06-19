@@ -87,15 +87,14 @@
 
 .socialLink {
   font-size: 15px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
   color: var(--text);
   text-decoration: none;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 
   &:hover {
-    opacity: 0.6;
+    color: var(--brand-color-yellow); // #FFFF00 — matches the header Contact link
+    font-style: italic;
   }
 }
 
