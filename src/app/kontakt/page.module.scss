@@ -154,10 +154,10 @@
 // grows/shrinks with the viewport without overflow or a gap. ---
 @media (max-width: 520px) {
   .main {
-    // The entire header reserve lives on the grid below (deterministic), so
-    // none of it can be eaten by a dvh/flex interaction on .main's padding.
+    // Header is in-flow (position: relative, ~80px on mobile). Main fills the
+    // viewport space BELOW it via the base flex:1 1 auto + min-height:0 — no
+    // main-owned 100dvh (that stacked on top of the header and overflowed).
     padding-top: 0;
-    height: 100dvh; // dynamic viewport height — no overflow when the address bar shows
     overflow: hidden; // safety: the scaled photo never forces a scrollbar
   }
 
@@ -168,8 +168,8 @@
     flex: 1; // still fills .main as a flex item of the column
     display: grid;
     grid-template-rows: auto 1fr;
-    row-gap: 24px; // gap between the text row and the photo row
-    padding-top: 64px; // full header(64)+gap(64) reserve, deterministic
+    row-gap: 24px; // text row → photo row
+    padding-top: 24px; // header → text (was 64px header double-reserve)
   }
 
   .text {
